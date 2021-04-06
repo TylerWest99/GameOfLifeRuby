@@ -26,9 +26,10 @@ class GameOfLife
         @cols = tokens.shift.to_i
 
         #
-        # TO DO: setup @grid as array of arrays and fill it with values from the tokens array
-        for i in 0..@rows
-            for j in 0..@cols
+        # Done
+        for i in 0..@rows-1
+            @grid[i] = Array.new
+            for j in 0..@cols-1
                 @grid[i][j] = tokens.shift.to_i
             end
         end
@@ -39,8 +40,14 @@ class GameOfLife
         data = @rows.to_s + ' ' + @cols.to_s
 
         #
-        # TO DO: append the values in @grid to data
-        #
+        # Done
+        for i in 0..@rows-1
+            for j in 0..@cols-1
+                dataValue = @grid[i][j]
+                dataString = dataValue.to_s
+                data = data + " " + dataString
+            end
+        end
 
         data += "\n"
         IO.write(file, data)
@@ -57,9 +64,46 @@ class GameOfLife
 
         #
         # TO DO: set values in temp grid to next generation
-        # 
 
-        # DO NOE DELETE: set @grid to temp grid
+        # sets old grid
+        for i in 0..@rows-1
+            for j in 0..@cols-1
+                temp[i][j] = @grid[i][j]
+            end 
+        end
+
+        # changes the values in temp
+
+        # sets neighbors to 0
+        numNeighbors = 0
+
+        for i in 0..@rows-1
+            for j in 0..@cols-1
+
+                # sets num of neighbors
+                numNeighbors = getNeighbors(i,j);
+    
+                if @grid[i][j] == 1 && numNeighbors < 2
+                    temp[i][j] = 0
+                end
+
+                if @grid[i][j] == 1 && numNeighbors > 3
+                    temp[i][j] = 0
+                end
+
+                if @grid[i][j] == 0 && numNeighbors == 3
+                    temp[i][j] = 1
+                end
+
+                if @grid[i][j] == 1 && (numNeighbors == 2 || numNeighbors == 3)
+                    temp[i][j] = 1
+                end
+            end
+        end
+
+
+
+        # DO NOT DELETE: set @grid to temp grid
         @grid = temp
     end
 
@@ -68,8 +112,33 @@ class GameOfLife
         neighbors = 0
 
         #
-        # TO DO: determine number of neighbors of cell at @grid[i][j]
-        #
+        # Done
+        
+        for ii in -1..1
+		    for jj in -1..1
+
+			    # does nothing for itself
+			    if ii == 0 && jj == 0
+				    next
+                end
+
+			    currentRow = i + ii
+			    currentCol = j + jj
+
+			    if currentRow < 0 || currentRow >= @rows
+				    next
+                end
+
+			    if currentCol < 0 || currentCol >= @cols
+				    next
+                end
+
+			    if @grid[currentRow][currentCol] == 1
+				    neighbors = neighbors + 1
+                end
+
+		    end
+	    end
 
         # DO NOT DELETE THE LINE BELOW
         neighbors
